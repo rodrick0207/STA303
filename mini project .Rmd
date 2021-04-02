@@ -1,0 +1,238 @@
+---
+title: "Mini Project"
+author: "Yuxuan Long"
+date: "7/30/2020"
+output: pdf_document
+---
+
+## 1)
+```{r echo=TRUE}
+set.seed(1005104628)
+n.sim=100
+n=10
+b0=c()
+b1=c()
+
+for (i in 1:n.sim){
+  e<-rnorm(n, 0 ,2)
+  x<-rnorm(n, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  b0=c(b0,coefficients(model)[1])
+  b1=c(b1,coefficients(model)[2])
+}
+b0=as.vector(data.frame(b0)[,1])
+b1=as.vector(data.frame(b1)[,1])
+b1
+```
+\newpage
+## 2)
+```{r echo=FALSE}
+hist(b0,freq = FALSE,breaks = 15)
+hist(b1,freq = FALSE,breaks = 25)
+```
+Base on the histogram for $\beta_0$, the shape is symmetric that the value of $\beta_0$ are contentrated between 0 and 1. Base on the histogram for $\beta_1$, the shape is also symmetric. The value of $\beta_1$ are contentrated at around 2, which means the mean should be around 2.
+
+\newpage
+## 3)
+```{r, echo=FALSE}
+value=c(mean(b0),mean(b1))
+estimate = c("b_0","b_1")
+data.frame(estimate,value)
+```
+According to the plot of Q2, both plot are symmetric which are concentrated at about 0 and 2. It means the mean of $\beta_0$ and $\beta_1$ should 0 and 2, which are close to the mean we calculate here.
+
+## 4)
+```{r, echo=FALSE}
+set.seed(1005104628)
+n.sim=100
+n=10
+SE_b1=c()
+
+for (i in 1:n.sim){
+  e<-rnorm(n, 0 ,2)
+  x<-rnorm(n, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  model = summary(model)
+  SE_b1=c(SE_b1,coef(model)[2,2])
+}
+ratio = (b1-2)/SE_b1
+hist(ratio,freq = FALSE,breaks = 15)
+```
+
+Based on the histogram, the shape of the ratio between $\hat{\beta_1}-\beta_1$ and $s(\hat{\beta_1})$ is symmetric. Its values are concentrated in about 0, which means the mean of the t-statistic should be around 0.
+\newpage
+
+## 5)
+```{r, echo=FALSE}
+library(imager)
+im<-load.image("Q5.jpg")
+plot.new() 
+rasterImage(im,0,0,1,1)
+```
+
+## 6)
+```{r, echo=FALSE}
+t_square=(b1/SE_b1)^2
+hist(t_square,freq = FALSE,breaks = 20)
+```
+
+Its shape is right skewed, which is similar to F-distribution. This shows that the square of T-test is equivalent to the F-test, that $F^*={t^*}^2$
+
+## 7)
+```{r, echo=FALSE}
+set.seed(1005104628)
+n.sim=100
+n=10
+b0_25=c()
+b1_25=c()
+b0_50=c()
+b1_50=c()
+b0_100=c()
+b1_100=c()
+
+for (i in 1:n.sim){
+  e<-rnorm(25, 0 ,2)
+  x<-rnorm(25, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  b0_25=c(b0_25,coefficients(model)[1])
+  b1_25=c(b1_25,coefficients(model)[2])
+}
+b0_25=as.vector(data.frame(b0_25)[,1])
+b1_25=as.vector(data.frame(b1_25)[,1])
+
+for (i in 1:n.sim){
+  e<-rnorm(50, 0 ,2)
+  x<-rnorm(50, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  b0_50=c(b0_50,coefficients(model)[1])
+  b1_50=c(b1_50,coefficients(model)[2])
+}
+b0_50=as.vector(data.frame(b0_50)[,1])
+b1_50=as.vector(data.frame(b1_50)[,1])
+
+for (i in 1:n.sim){
+  e<-rnorm(100, 0 ,2)
+  x<-rnorm(100, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  b0_100=c(b0_100,coefficients(model)[1])
+  b1_100=c(b1_100,coefficients(model)[2])
+}
+b0_100=as.vector(data.frame(b0_100)[,1])
+b1_100=as.vector(data.frame(b1_100)[,1])
+
+hist(b0_25,freq = FALSE,breaks = 20)
+hist(b0_50,freq = FALSE,breaks = 20)
+hist(b0_100,freq = FALSE,breaks = 15)
+hist(b1_25,freq = FALSE,breaks = 20)
+hist(b1_50,freq = FALSE,breaks = 15)
+hist(b1_100,freq = FALSE,breaks = 20)
+value=c(mean(b0_25),mean(b0_50),mean(b0_100),mean(b1_25),mean(b1_50),mean(b1_100))
+estimate = c("b0_25","b0_50","b0_100","b1_25","b1_50","b1_100")
+data.frame(estimate,value)
+```
+Compare the plots of the 3 different sample size of $\beta_0$  and the plots of the 3 different sample size of $\beta_1$, their distribution are more clustered around 0.5 and 2 respectively as the sample size increase (we can verify it by looking at the density of each plot). Also, the mean of $\beta_0$ and $\beta_1$ are closer and closer to 0.5 and 2 respectively as the sample size increase.
+
+\newpage
+## Appendix
+
+## 2)
+```{r, fig.keep = "none", results = "hide"}
+hist(b0,freq = FALSE,breaks = 15)
+hist(b1,freq = FALSE,breaks = 25)
+```
+## 3)
+```{r, fig.keep = "none", results = "hide"}
+value=c(mean(b0),mean(b1))
+estimate = c("b_0","b_1")
+data.frame(estimate,value)
+```
+## 4)
+```{r, fig.keep = "none", results = "hide"}
+set.seed(1005104628)
+n.sim=100
+n=10
+SE_b1=c()
+
+for (i in 1:n.sim){
+  e<-rnorm(n, 0 ,2)
+  x<-rnorm(n, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  model = summary(model)
+  SE_b1=c(SE_b1,coef(model)[2,2])
+}
+ratio = (b1-2)/SE_b1
+hist(ratio,freq = FALSE,breaks = 15)
+```
+## 5)
+```{r, fig.keep = "none", results = "hide"}
+library(imager)
+im<-load.image("Q5.jpg")
+plot.new() 
+rasterImage(im,0,0,1,1)
+```
+## 6)
+```{r, fig.keep = "none", results = "hide"}
+t_square=(b1/SE_b1)^2
+hist(t_square,freq = FALSE,breaks = 20)
+```
+## 7)
+```{r, fig.keep = "none", results = "hide"}
+set.seed(1005104628)
+n.sim=100
+n=10
+b0_25=c()
+b1_25=c()
+b0_50=c()
+b1_50=c()
+b0_100=c()
+b1_100=c()
+
+for (i in 1:n.sim){
+  e<-rnorm(25, 0 ,2)
+  x<-rnorm(25, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  b0_25=c(b0_25,coefficients(model)[1])
+  b1_25=c(b1_25,coefficients(model)[2])
+}
+b0_25=as.vector(data.frame(b0_25)[,1])
+b1_25=as.vector(data.frame(b1_25)[,1])
+
+for (i in 1:n.sim){
+  e<-rnorm(50, 0 ,2)
+  x<-rnorm(50, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  b0_50=c(b0_50,coefficients(model)[1])
+  b1_50=c(b1_50,coefficients(model)[2])
+}
+b0_50=as.vector(data.frame(b0_50)[,1])
+b1_50=as.vector(data.frame(b1_50)[,1])
+
+for (i in 1:n.sim){
+  e<-rnorm(100, 0 ,2)
+  x<-rnorm(100, 0, 1)
+  y<-0.5 + 2*x + e
+  model <- lm(y~x)
+  b0_100=c(b0_100,coefficients(model)[1])
+  b1_100=c(b1_100,coefficients(model)[2])
+}
+b0_100=as.vector(data.frame(b0_100)[,1])
+b1_100=as.vector(data.frame(b1_100)[,1])
+
+hist(b0_25,freq = FALSE,breaks = 20)
+hist(b0_50,freq = FALSE,breaks = 20)
+hist(b0_100,freq = FALSE,breaks = 15)
+hist(b1_25,freq = FALSE,breaks = 20)
+hist(b1_50,freq = FALSE,breaks = 15)
+hist(b1_100,freq = FALSE,breaks = 20)
+value=c(mean(b0_25),mean(b0_50),mean(b0_100),mean(b1_25),mean(b1_50),mean(b1_100))
+estimate = c("b0_25","b0_50","b0_100","b1_25","b1_50","b1_100")
+data.frame(estimate,value)
+```
